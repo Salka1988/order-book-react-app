@@ -61,7 +61,6 @@ ctx.onmessage = function receive(event) {
     }
 
     case FETCH_PAIRS: {
-      //console.warn('FETCH_PAIRS WORKER');
       axios.get('https://api.binance.com/api/v3/exchangeInfo').then((res) => {
         const pairs = res.data.symbols.map((item) => {
           return item.symbol;
