@@ -7,3 +7,4 @@ export const GET_COIN_VALUE = 'GET_COIN_VALUE';
 export const RESTART_SOCKET = 'RESTART_SOCKET';
 export const PAIRS_FETCHED = 'PAIRS_FETCHED';
 export const SET_CONNECTED = 'SET_CONNECTED';
+export const SET_DEC = 'SET_DEC';

@@ -3,6 +3,7 @@ import {
   PAIRS_FETCHED,
   SET_COIN_VALUE,
   SET_CONNECTED,
+  SET_DEC,
   SET_PAIR,
   TABLE_SWITCH,
 } from '../actions/types';
@@ -15,17 +16,19 @@ let initialState = {
     asks: [],
     bids: [],
   },
+  setDec: null,
   connected: false,
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case SET_CONNECTED: {
-      //console.warn('sssss');
       break;
     }
     case PAIRS_FETCHED:
       return { ...state, pairs: action.payload };
+    case SET_DEC:
+      return { ...state, setDec: action.data };
     case TABLE_SWITCH:
       return { ...state, tableSwitch: action.data };
     case SET_PAIR:
@@ -40,7 +43,6 @@ export default (state = initialState, action) => {
         connected: true,
       };
     case ORDER_TABLE_INIT:
-      //console.warn('In defaultReducer ORDER_TABLE_INIT');
       return { ...state, test: action.data };
     default:
       return state;

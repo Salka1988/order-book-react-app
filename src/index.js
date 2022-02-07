@@ -4,16 +4,14 @@ import ReactDOM from 'react-dom';
 import './styles/main.scss';
 import { Provider } from 'react-redux';
 import { thunk } from 'redux-middleware';
-import { loggerMiddleware } from './redux/middlewares/fetchDataMiddleware';
 import { applyMiddleware, compose, createStore } from 'redux';
 
 import rootReducer from './redux/reducers';
 import App from './App';
-import { createRenderMiddleware } from './redux/middlewares/WorkerMiddleware';
+import { createWorkerMiddleware } from './redux/middlewares/workerMiddleware';
 
 const middleware = [thunk];
-middleware.push(loggerMiddleware);
-middleware.push(createRenderMiddleware);
+middleware.push(createWorkerMiddleware);
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(rootReducer, composeEnhancers(applyMiddleware(...middleware)));

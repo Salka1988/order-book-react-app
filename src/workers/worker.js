@@ -11,9 +11,25 @@ ctx.onmessage = function receive(event) {
 
   switch (request.type) {
     case GET_COIN_VALUE: {
-      let pair = request.pair.toLowerCase();
-      //console.warn(pair);
+      let pair = request?.pair?.toLowerCase();
+      let prevPair = request?.prevPair?.toLowerCase();
+
       const webSocket = new WebSocket('wss://stream.binance.com:9443/ws');
+
+      if (prevPair) {
+        //console.error(prevPair);
+        //let closeMsg = {
+        //  method: 'UNSUBSCRIBE',
+        //  params: [prevPair + '@depth20'],
+        //  id: 312,
+        //};
+        //webSocket.send(JSON.stringify(closeMsg));
+        //webSocket.close();
+        //webSocket.onclose = () => {
+        //  console.error(webSocket.url, 'close');
+        //};
+      }
+
       let params = [pair + '@depth20'];
       let msg = {
         method: 'SUBSCRIBE',
@@ -23,10 +39,12 @@ ctx.onmessage = function receive(event) {
       webSocket.onopen = () => {
         webSocket.send(JSON.stringify(msg));
       };
-      //console.warn('U SOKETU');
+
       webSocket.onmessage = (message) => {
         const value = message.data;
-        ctx.postMessage(setCoinValue(value));
+        let obj = JSON.parse(value);
+        let asksBids = { asks: obj['bids'], bids: obj['asks'] };
+        ctx.postMessage(setCoinValue(asksBids));
       };
       break;
     }

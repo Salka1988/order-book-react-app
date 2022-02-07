@@ -32,7 +32,7 @@ export default {
     // [name] - Will be set per each key name in `entry`
     filename: '[name].[contenthash].js',
 
-    publicPath: '/orderBook',
+    publicPath: '/',
   },
 
   module: {

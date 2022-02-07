@@ -9,8 +9,9 @@ import { useTheme, styled } from '@mui/material/styles';
 import { VariableSizeList } from 'react-window';
 import Typography from '@mui/material/Typography';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectAllPairs } from '../../redux/selectors/defaultSelectors';
+import { selectAllPairs, selectSetPair } from '../../redux/selectors/defaultSelectors';
 import { setPair } from '../../redux/actions/defaultDataActions';
+import { usePrevious } from '../ShowDataComponent';
 
 const LISTBOX_PADDING = 8; // px
 
@@ -125,10 +126,13 @@ const StyledPopper = styled(Popper)({
   },
 });
 
-export const Virtualize = () => {
+export const VirtualizeAutocomplete = () => {
   const dispatch = useDispatch();
 
   let pairs = useSelector(selectAllPairs);
+
+  const selectedPair = useSelector(selectSetPair);
+  const prevPair = usePrevious(selectedPair);
 
   return (
     <Autocomplete
@@ -136,17 +140,16 @@ export const Virtualize = () => {
       sx={{ width: 300 }}
       size={'small'}
       disableListWrap
-      //onChange={(e) => {
-      //  if (e.target.innerText) {
-      //    dispatch(setPair(e.target.innerText));
-      //  }
-      //}}
       onKeyPress={(e) => {
-        if (e.target.value) {
-          dispatch(setPair(e.target.value));
+        if (e.target.value && e.key === 'Enter') {
+          dispatch(setPair(e.target.value, prevPair));
         }
       }}
-      onClick={() => console.warn('clicked')}
+      onChange={(e) => {
+        if (e.type === 'click' && e.target.innerText !== '') {
+          dispatch(setPair(e.target.innerText, prevPair));
+        }
+      }}
       PopperComponent={StyledPopper}
       ListboxComponent={ListboxComponent}
       options={pairs.map((pair) => pair.title)}

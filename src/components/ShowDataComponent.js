@@ -4,64 +4,47 @@ import { Grid } from '@mui/material';
 import Box from '@mui/material/Box';
 import { BasicCard } from './MUIComponents/BasicCard';
 import { CustomToggleButtonGroup } from './MUIComponents/CustomToggleButtonGroup';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
+  selectAllPairs,
   selectCoinValuesAsks,
   selectCoinValuesBids,
   selectToggleTable,
 } from '../redux/selectors/defaultSelectors';
-//import { setCoinValue } from '../redux/actions/defaultDataActions';
+import { useParams } from 'react-router-dom';
+import { setPair } from '../redux/actions/defaultDataActions';
+import { VirtualizeAutocomplete } from './MUIComponents/AutocompleteSearch';
+import { BasicSelect } from './MUIComponents/BasicSelect';
 
 export const ShowDataComponent = () => {
   let tableMode = useSelector(selectToggleTable);
-  //const selectedPair = useSelector(selectSetPair);
-  //const webSocket = useRef(null);
 
-  //const dispatch = useDispatch();
-  //const prevCount = usePrevious(selectedPair);
+  const dispatch = useDispatch();
+  let { pair } = useParams();
+  let pairs = useSelector(selectAllPairs);
+
+  const once = useRef(true);
+
+  useEffect(() => {
+    if (once.current) {
+      let a = pairs.find((p) => p.title === pair);
+      if (a) {
+        dispatch(setPair(a.title));
+        once.current = false;
+      }
+    }
+  });
 
   let bids = useSelector(selectCoinValuesBids);
   let asks = useSelector(selectCoinValuesAsks);
-
-  //useEffect(() => {
-  //  if (prevCount !== selectedPair) {
-  //    console.warn(prevCount);
-  //    console.warn(selectedPair);
-  //
-  //    let closeMsg = {
-  //      method: 'UNSUBSCRIBE',
-  //      params: [prevCount?.toLowerCase() + '@depth20'],
-  //      id: 312,
-  //    };
-  //    webSocket.current.onclose = () => {
-  //      webSocket.current.send(JSON.stringify(closeMsg));
-  //    };
-  //
-  //    webSocket.current.terminate();
-  //  }
-  //
-  //  webSocket.current = new WebSocket('wss://stream.binance.com:9443/ws');
-  //  let params = selectedPair ? [selectedPair?.toLowerCase() + '@depth20'] : ['btcusdt@depth20'];
-  //  let msg = {
-  //    method: 'SUBSCRIBE',
-  //    params: params,
-  //    id: 1,
-  //  };
-  //
-  //  webSocket.current.onopen = () => {
-  //    webSocket.current.send(JSON.stringify(msg));
-  //  };
-  //
-  //  webSocket.current.onmessage = (message) => {
-  //    const value = message.data;
-  //    dispatch(setCoinValue(value));
-  //  };
-  //});
 
   return (
     <Box sx={{ flexGrow: 2 }} marginTop={5}>
       <Grid container spacing={2} columns={16} alignItems="center" justifyContent="center">
         <CustomToggleButtonGroup />
+      </Grid>
+      <Grid container mt={4} spacing={2} columns={16} alignItems="center" justifyContent="center">
+        <VirtualizeAutocomplete />
       </Grid>
       <Grid
         container
@@ -69,7 +52,7 @@ export const ShowDataComponent = () => {
         columns={16}
         alignItems="center"
         justifyContent="center"
-        marginTop={5}
+        marginTop={2}
       >
         {(tableMode === 'B' || tableMode === 'BS') && (
           <Grid item xs={6}>
@@ -81,6 +64,10 @@ export const ShowDataComponent = () => {
             <BasicCard title={'Sell'} values={asks} />
           </Grid>
         )}
+      </Grid>
+
+      <Grid container mt={14} spacing={2} columns={16} alignItems="center" justifyContent="center">
+        <BasicSelect />
       </Grid>
     </Box>
   );

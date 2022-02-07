@@ -34,14 +34,7 @@ export function binarySearch(items, value) {
   return items[middle]?.title !== value ? -1 : middle;
 }
 
-export const filterFunc = (array, searchStr) => {
-  console.warn(array);
-  console.warn(searchStr);
-
-  let results = array?.filter((value) => {
-    return value?.title?.indexOf(searchStr?.toUpperCase()) >= 0;
-  });
-
-  console.warn(results);
-  return results;
+export const countDecimals = (value) => {
+  if (Math.floor(value) === value) return 0;
+  return value.toString().split('.')[1].length || 0;
 };

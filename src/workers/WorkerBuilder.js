@@ -13,7 +13,6 @@ export class WorkerBuilder {
 
   onMessage = (store) => {
     this.worker.onmessage = (e) => {
-      console.warn('FROM WORKER DISPATCH');
       store(e.data);
     };
   };
