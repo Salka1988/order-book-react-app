@@ -2,6 +2,9 @@ import { FETCH_PAIRS, GET_COIN_VALUE, RESTART_SOCKET } from '../redux/actions/ty
 import { allPairsFetched, setCoinValue } from '../redux/actions/defaultDataActions';
 import axios from 'axios';
 import { mergeSort } from '../util/util';
+import { Singleton } from '../util/singleton';
+
+let singleton = new Singleton();
 
 const ctx = self;
 
@@ -14,20 +17,23 @@ ctx.onmessage = function receive(event) {
       let pair = request?.pair?.toLowerCase();
       let prevPair = request?.prevPair?.toLowerCase();
 
-      const webSocket = new WebSocket('wss://stream.binance.com:9443/ws');
+      if (prevPair !== pair) {
+        const webSocket = new WebSocket('wss://stream.binance.com:9443/ws');
+        singleton.set(pair, webSocket);
+      }
 
       if (prevPair) {
-        //console.error(prevPair);
-        //let closeMsg = {
-        //  method: 'UNSUBSCRIBE',
-        //  params: [prevPair + '@depth20'],
-        //  id: 312,
-        //};
-        //webSocket.send(JSON.stringify(closeMsg));
-        //webSocket.close();
-        //webSocket.onclose = () => {
-        //  console.error(webSocket.url, 'close');
-        //};
+        let closeMsg = {
+          method: 'UNSUBSCRIBE',
+          params: [prevPair + '@depth20'],
+          id: 312,
+        };
+        singleton.get(prevPair).send(JSON.stringify(closeMsg));
+        singleton.get(prevPair).close();
+        singleton.get(prevPair).onclose = () => {
+          console.warn('websocket close');
+          singleton.del(prevPair);
+        };
       }
 
       let params = [pair + '@depth20'];
@@ -36,11 +42,11 @@ ctx.onmessage = function receive(event) {
         params: params,
         id: 1,
       };
-      webSocket.onopen = () => {
-        webSocket.send(JSON.stringify(msg));
+      singleton.get(pair).onopen = () => {
+        singleton.get(pair).send(JSON.stringify(msg));
       };
 
-      webSocket.onmessage = (message) => {
+      singleton.get(pair).onmessage = (message) => {
         const value = message.data;
         let obj = JSON.parse(value);
         let asksBids = { asks: obj['bids'], bids: obj['asks'] };
