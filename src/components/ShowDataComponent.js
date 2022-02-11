@@ -27,7 +27,7 @@ export const ShowDataComponent = () => {
 
   useEffect(() => {
     if (once.current) {
-      let a = pairs.find((p) => p.title === pair);
+      let a = pairs.find((p) => p?.title === pair);
       if (a) {
         dispatch(setPair(a.title));
         once.current = false;

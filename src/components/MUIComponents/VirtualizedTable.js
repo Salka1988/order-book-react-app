@@ -6,7 +6,7 @@ import { createTheme } from '@mui/material/styles';
 import TableCell from '@mui/material/TableCell';
 import Paper from '@mui/material/Paper';
 import { AutoSizer, Column, Table } from 'react-virtualized';
-import { countDecimals } from '../../util/util';
+import { toFixedTrunc } from '../../util/util';
 import { useSelector } from 'react-redux';
 import { selectSetDec } from '../../redux/selectors/defaultSelectors';
 
@@ -159,12 +159,8 @@ export const ReactVirtualizedTable = ({ title, values }) => {
 
   const rows = [];
 
-  const fixSize = (a) => {
-    return countDecimals(a) > setDec && setDec ? a.toFixed(setDec) : a;
-  };
-
   values?.forEach(([a, b]) => {
-    rows.push(createData(title, fixSize(Number(a)), fixSize(Number(b))));
+    rows.push(createData(title, toFixedTrunc(Number(a), setDec), Number(b)));
   });
 
   return (

@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectAllPairs, selectSetPair } from '../../redux/selectors/defaultSelectors';
 import { setPair } from '../../redux/actions/defaultDataActions';
 import { usePrevious } from '../ShowDataComponent';
+import { useState } from 'react';
 
 const LISTBOX_PADDING = 8; // px
 
@@ -129,6 +130,8 @@ const StyledPopper = styled(Popper)({
 export const VirtualizeAutocomplete = () => {
   const dispatch = useDispatch();
 
+  const [localSelected, setLocalSelected] = useState();
+
   let pairs = useSelector(selectAllPairs);
 
   const selectedPair = useSelector(selectSetPair);
@@ -141,12 +144,17 @@ export const VirtualizeAutocomplete = () => {
       size={'small'}
       disableListWrap
       onKeyPress={(e) => {
-        if (e.target.value && e.key === 'Enter') {
+        if (e.target.value && e.key === 'Enter' && e.target.value !== localSelected) {
+          setLocalSelected(e.target.value);
           dispatch(setPair(e.target.value, prevPair));
         }
       }}
       onChange={(e) => {
-        if (e.type === 'click' && e.target.innerText !== '') {
+        if (
+          e.type === 'click' &&
+          e.target.innerText !== '' &&
+          e.target.innerText !== localSelected
+        ) {
           dispatch(setPair(e.target.innerText, prevPair));
         }
       }}

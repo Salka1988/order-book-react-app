@@ -19,18 +19,21 @@ ctx.onmessage = function receive(event) {
 
       if (prevPair !== pair) {
         const webSocket = new WebSocket('wss://stream.binance.com:9443/ws');
+
         singleton.set(pair, webSocket);
 
-        if (prevPair) {
+        if (prevPair !== '' && prevPair !== undefined) {
+          //console.warn(prevPair);
+
           let closeMsg = {
             method: 'UNSUBSCRIBE',
             params: [prevPair + '@depth20'],
             id: 312,
           };
+
           singleton.get(prevPair).send(JSON.stringify(closeMsg));
           singleton.get(prevPair).close();
           singleton.get(prevPair).onclose = () => {
-            console.warn('websocket close');
             singleton.del(prevPair);
           };
         }
@@ -41,6 +44,7 @@ ctx.onmessage = function receive(event) {
           params: params,
           id: 1,
         };
+
         singleton.get(pair).onopen = () => {
           singleton.get(pair).send(JSON.stringify(msg));
         };
@@ -73,6 +77,8 @@ ctx.onmessage = function receive(event) {
 
       break;
     }
+    default:
+      break;
   }
 
   if (response) {

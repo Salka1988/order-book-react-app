@@ -17,7 +17,7 @@ export default webpackMerge(baseConfig, {
 
   // Spin up a server for quick development
   devServer: {
-    open: ['http://localhost:8080/orderBook'],
+    open: ['http://localhost:8080/'],
     //open: true,
 
     port: 8080,

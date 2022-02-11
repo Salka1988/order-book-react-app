@@ -16,7 +16,7 @@ let initialState = {
     asks: [],
     bids: [],
   },
-  setDec: null,
+  setDec: '2',
   connected: false,
 };
 

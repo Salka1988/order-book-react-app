@@ -17,8 +17,8 @@ const App = () => {
     <BrowserRouter>
       <MainAppBar />
       <Switch>
-        <Route exact path="/orderBook" component={ShowDataComponent} />
-        <Route path="/orderBook/:pair" component={ShowDataComponent} />
+        <Route exact path="/" component={ShowDataComponent} />
+        <Route path="/:pair" component={ShowDataComponent} />
       </Switch>
     </BrowserRouter>
   );

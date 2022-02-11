@@ -8,7 +8,7 @@ import { useDispatch } from 'react-redux';
 import { setDec } from '../../redux/actions/defaultDataActions';
 
 export const BasicSelect = () => {
-  const [deci, setDeci] = React.useState('');
+  const [deci, setDeci] = React.useState('2');
 
   const dispatch = useDispatch();
 
@@ -20,7 +20,7 @@ export const BasicSelect = () => {
   return (
     <Box sx={{ minWidth: 120 }}>
       <FormControl fullWidth>
-        <InputLabel id="demo-simple-select-label">Dec</InputLabel>
+        <InputLabel id="demo-simple-select-label"> Dec </InputLabel>
         <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"
