@@ -35,8 +35,8 @@ export const ShowDataComponent = () => {
     }
   });
 
-  let bids = useSelector(selectCoinValuesBids);
-  let asks = useSelector(selectCoinValuesAsks);
+  let asks = useSelector(selectCoinValuesBids);
+  let bids = useSelector(selectCoinValuesAsks);
 
   return (
     <Box sx={{ flexGrow: 2 }} marginTop={5}>

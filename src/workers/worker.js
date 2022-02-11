@@ -23,7 +23,7 @@ ctx.onmessage = function receive(event) {
         singleton.set(pair, webSocket);
 
         if (prevPair !== '' && prevPair !== undefined) {
-          //console.warn(prevPair);
+          console.warn(prevPair);
 
           let closeMsg = {
             method: 'UNSUBSCRIBE',

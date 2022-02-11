@@ -133,6 +133,7 @@ export const VirtualizeAutocomplete = () => {
   const [localSelected, setLocalSelected] = useState();
 
   let pairs = useSelector(selectAllPairs);
+  let setPairValue = useSelector(selectSetPair);
 
   const selectedPair = useSelector(selectSetPair);
   const prevPair = usePrevious(selectedPair);
@@ -143,6 +144,12 @@ export const VirtualizeAutocomplete = () => {
       sx={{ width: 300 }}
       size={'small'}
       disableListWrap
+      value={setPairValue}
+      //getOptionSelected={(option, value) => {
+      //  console.warn(option);
+      //  console.warn(value);
+      //  console.warn(setPairValue);
+      //}}
       onKeyPress={(e) => {
         if (e.target.value && e.key === 'Enter' && e.target.value !== localSelected) {
           setLocalSelected(e.target.value);
