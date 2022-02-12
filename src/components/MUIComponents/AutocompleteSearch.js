@@ -9,10 +9,13 @@ import { useTheme, styled } from '@mui/material/styles';
 import { VariableSizeList } from 'react-window';
 import Typography from '@mui/material/Typography';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectAllPairs, selectSetPair } from '../../redux/selectors/defaultSelectors';
+import { selectAllPairs } from '../../redux/selectors/defaultSelectors';
 import { setPair } from '../../redux/actions/defaultDataActions';
-import { usePrevious } from '../ShowDataComponent';
-import { useState } from 'react';
+//import { usePrevious } from '../ShowDataComponent';
+//import { useMountEffect } from '../../util/hooks/useMountEffect';
+import { useHistory } from 'react-router-dom';
+import { useEffect } from 'react';
+//import { useState } from 'react';
 
 const LISTBOX_PADDING = 8; // px
 
@@ -127,44 +130,35 @@ const StyledPopper = styled(Popper)({
   },
 });
 
-export const VirtualizeAutocomplete = () => {
+export const CryptocurrencyDropdown = (props) => {
   const dispatch = useDispatch();
 
-  const [localSelected, setLocalSelected] = useState();
-
   let pairs = useSelector(selectAllPairs);
-  let setPairValue = useSelector(selectSetPair);
 
-  const selectedPair = useSelector(selectSetPair);
-  const prevPair = usePrevious(selectedPair);
+  //const selectedPair = useSelector(selectSetPair);
+  //const prevPair = usePrevious(selectedPair);
+
+  const history = useHistory();
+
+  useEffect(() => {
+    let a = pairs.find((p) => p?.title === props?.value);
+    if (a) {
+      dispatch(setPair(a.title));
+    }
+  }, [dispatch, pairs, props?.value]);
 
   return (
     <Autocomplete
+      {...props}
       id="virtualize-demo"
       sx={{ width: 300 }}
       size={'small'}
       disableListWrap
-      value={setPairValue}
-      //getOptionSelected={(option, value) => {
-      //  console.warn(option);
-      //  console.warn(value);
-      //  console.warn(setPairValue);
-      //}}
-      onKeyPress={(e) => {
-        if (e.target.value && e.key === 'Enter' && e.target.value !== localSelected) {
-          setLocalSelected(e.target.value);
-          dispatch(setPair(e.target.value, prevPair));
-        }
+      onChange={(_, value) => {
+        history.push(value);
+        //dispatch(setPair(value));
       }}
-      onChange={(e) => {
-        if (
-          e.type === 'click' &&
-          e.target.innerText !== '' &&
-          e.target.innerText !== localSelected
-        ) {
-          dispatch(setPair(e.target.innerText, prevPair));
-        }
-      }}
+      disableClearable
       PopperComponent={StyledPopper}
       ListboxComponent={ListboxComponent}
       options={pairs.map((pair) => pair.title)}
